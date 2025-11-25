@@ -8,7 +8,7 @@ Thumbs.db
 # ===== ROOT NODE MODULES =====
 node_modules/
 
-# ===== FRONTEND =====
+# ===== FRONTEND =====Reminder APP-Adv Level in that my-app in that .vscode node_modules public src folders .gitignore package package-lock and readme fles in src folder Api Backend Frontend Folders App App App.test index index logo reportWebVitals and setupTests files and in api folder config file and in backend folder controllers middleware node_modules routes uploads folders .env db package package_lock server and socket files are there in frontend folder  assets dirctor employee manager managingdirector middleware pages styles superadmin utils folders are there and 
 src/Frontend/node_modules/
 src/Frontend/build/
 src/Frontend/dist/
