@@ -1,5 +1,28 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# ===== GLOBAL =====
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ===== ROOT NODE MODULES =====
+node_modules/
+
+# ===== FRONTEND =====
+src/Frontend/node_modules/
+src/Frontend/build/
+src/Frontend/dist/
+src/Frontend/.cache/
+
+# ===== BACKEND =====
+src/Backend/node_modules/
+src/Backend/uploads/
+src/Backend/package-lock.json
+
+# ===== ENV FILES =====
+.env
+.env.*
+
 # dependencies
 /node_modules
 /.pnp
