@@ -44,9 +44,14 @@ const dbConfig = {
   ssl: { rejectUnauthorized: false }
 };
 
-// Export a function to create a fresh connection
 function getConnection() {
-  return mysql.createConnection(dbConfig);
+  const conn = mysql.createConnection(dbConfig);
+
+  conn.on("error", err => {
+    console.log("MYSQL ERROR:", err.code);
+  });
+
+  return conn;
 }
 
 module.exports = getConnection;
