@@ -31,30 +31,52 @@
 
 // module.exports = db;
 
+// const mysql = require("mysql2");
+// const dotenv = require("dotenv");
+// dotenv.config();
+
+// const dbConfig = {
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   port: process.env.DB_PORT,
+//   ssl: { rejectUnauthorized: false }
+// };
+
+// function getConnection() {
+//   const conn = mysql.createConnection(dbConfig);
+
+//   conn.on("error", err => {
+//     console.log("MYSQL ERROR:", err.code);
+//   });
+
+//   return conn;
+// }
+
+// module.exports = getConnection;
+
 const mysql = require("mysql2");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const dbConfig = {
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: { rejectUnauthorized: false }
-};
+  ssl: { rejectUnauthorized: false },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-function getConnection() {
-  const conn = mysql.createConnection(dbConfig);
+db.on("error", (err) => {
+  console.log("MYSQL ERROR:", err.code);
+});
 
-  conn.on("error", err => {
-    console.log("MYSQL ERROR:", err.code);
-  });
-
-  return conn;
-}
-
-module.exports = getConnection;
+module.exports = db;
 
 
 // const mysql = require("mysql2");
