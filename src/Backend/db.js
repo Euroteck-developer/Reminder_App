@@ -57,26 +57,23 @@
 // module.exports = getConnection;
 
 const mysql = require("mysql2");
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
-const db = mysql.createPool({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   ssl: { rejectUnauthorized: false },
+
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
+  queueLimit: 0
 });
 
-db.on("error", (err) => {
-  console.log("MYSQL ERROR:", err.code);
-});
-
-module.exports = db;
+// This keeps old code working (db.query still works)
+module.exports = pool.promise();
 
 
 // const mysql = require("mysql2");
