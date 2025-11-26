@@ -24,11 +24,11 @@ const Profile = () => {
     const fetchAllData = async () => {
       try {
         const [profileRes, deptRes, roleRes] = await Promise.all([
-          axios.get(`${API_URL}/api/users/profile`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`${API_URL}/api/users/departments`),
-          axios.get(`${API_URL}/api/users/roles`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/users/departments`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/users/roles`),
         ]);
 
         const profileData = profileRes.data;
@@ -141,7 +141,7 @@ const Profile = () => {
     });
 
     axios
-      .put(`${API_URL}/api/users/profile`, data, {
+      .put(`${process.env.REACT_APP_API_URL}/api/users/profile`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -167,7 +167,7 @@ const Profile = () => {
   const avatar = preview
     ? preview
     : user.profile_pic
-    ? `${API_URL}${user.profile_pic}`
+    ? `${process.env.REACT_APP_API_URL}${user.profile_pic}`
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(
         user.name || "user"
       )}&background=0d6efd&color=fff&size=150`;

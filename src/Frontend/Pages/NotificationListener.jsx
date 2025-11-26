@@ -46,7 +46,7 @@ const NotificationListener = () => {
   const fetchReminders = useCallback(async () => {
     try {
       if (!token) return;
-      const res = await axios.get(`${API_URL}/api/reminders`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/reminders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       categorizeReminders(res.data);
@@ -103,7 +103,7 @@ const NotificationListener = () => {
   // FETCH TASKS BY TYPE
   const fetchTasksByType = async (type) => {
     try {
-      const res = await axios.get(`${API_URL}/api/reminders`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/reminders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const now = new Date();

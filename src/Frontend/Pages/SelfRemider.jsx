@@ -15,7 +15,7 @@ const SelfReminder = ({ taskId, taskStatus }) => {
     if (!taskId) return;
 
     try {
-      const res = await axios.get(`${API_URL}/api/self-reminder/${taskId}`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/self-reminder/${taskId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -47,7 +47,7 @@ const SelfReminder = ({ taskId, taskStatus }) => {
 
     try {
       await axios.post(
-        `${API_URL}/api/self-reminder/save`,
+        `${process.env.REACT_APP_API_URLL}/api/self-reminder/save`,
         {
           taskId,
           reminder_datetime: reminderDate,

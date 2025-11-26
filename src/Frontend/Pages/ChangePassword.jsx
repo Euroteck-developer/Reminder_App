@@ -36,7 +36,7 @@ const ChangePassword = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/api/auth/verify-password`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/verify-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const ChangePassword = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/api/auth/change-password`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/change-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

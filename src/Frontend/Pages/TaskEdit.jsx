@@ -54,10 +54,10 @@ const TaskEdit = () => {
   const fetchData = async () => {
     try {
       const [taskRes, usersRes] = await Promise.all([
-        axios.get(`${API_URL}/api/reminders/${id}`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/reminders/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get(`${API_URL}/api/users/all-users`, {
+        axios.get(`${process.env.REACT_APP_API_URL}/api/users/all-users`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -168,7 +168,7 @@ const TaskEdit = () => {
         assignedTo: assignedIds,
       };
 
-      await axios.put(`${API_URL}/api/reminders/update-task-status`, payload, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/reminders/update-task-status`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -192,7 +192,7 @@ const TaskEdit = () => {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      const res = await axios.delete(`${API_URL}/api/reminders/${id}`, {
+      const res = await axios.delete(`${process.env.REACT_APP_API_URL}/api/reminders/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

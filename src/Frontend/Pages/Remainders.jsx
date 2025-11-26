@@ -72,7 +72,7 @@ const Remainders = ({ currentUser }) => {
   // Fetch Users
   const fetchUsers = useCallback(() => {
     axios
-    .get(`${API_URL}/api/users/all-users`, {
+    .get(`${process.env.REACT_APP_API_URL}/api/users/all-users`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => {
@@ -137,7 +137,7 @@ const Remainders = ({ currentUser }) => {
 
   // Fetch Departments
   const fetchDepartments = () => {
-    axios.get(`${API_URL}/api/users/departments`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/users/departments`)
       .then(res => setDepartments(res.data))
       .catch(() => toast.error("Failed to fetch departments"));
   };
@@ -181,7 +181,7 @@ const Remainders = ({ currentUser }) => {
           
       // Create the reminder/task
       const res = await axios.post(
-        `${API_URL}/api/reminders`,
+        `${process.env.REACT_APP_API_URL}/api/reminders`,
         {
           description: taskDescription,
           users: usersToAssign,
@@ -199,7 +199,7 @@ const Remainders = ({ currentUser }) => {
         // Add initial "New" status history for each user
         for (const userId of usersToAssign) {
           await axios.post(
-            `${API_URL}/api/reminders/${taskId}/history`,
+            `${process.env.REACT_APP_API_URL}/api/reminders/${taskId}/history`,
             {
               user_id: userId,
               status: "New",
@@ -238,7 +238,7 @@ const Remainders = ({ currentUser }) => {
         userIds = allUsers.filter(u => deptIds.includes(u.department)).map(u => u.value);
       }
       await axios.post(
-        `${API_URL}/api/meetings`,
+        `${process.env.REACT_APP_API_URL}/api/meetings`,
         {
           description: meetingDescription,
           date: meetingDateTime.toISOString().slice(0, 19).replace("T", " "),

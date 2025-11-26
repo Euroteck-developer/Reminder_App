@@ -50,7 +50,7 @@ const UsersList = () => {
     const decoded = JSON.parse(atob(base64)); //atob Base64-encoded string back into normal text
     const currentUser = { id: decoded.id, role_id: decoded.role_id };
     
-    axios.get(`${API_URL}/api/users/all-users`, {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/users/all-users`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .then((res) => {
@@ -84,7 +84,7 @@ const UsersList = () => {
   // Fetch Roles
   const fetchRoles = () => {
     axios
-      .get(`${API_URL}/api/users/roles`)
+      .get(`${process.env.REACT_APP_API_URL}/api/users/roles`)
       .then((res) => setRoles(res.data))
       .catch(() => toast.error("Failed to fetch roles"));
   };
@@ -92,7 +92,7 @@ const UsersList = () => {
   // Fetch departments
   const fetchDepartments = () => {
     axios
-      .get(`${API_URL}/api/users/departments`)
+      .get(`${process.env.REACT_APP_API_URL}/api/users/departments`)
       .then((res) => setDepartments(res.data))
       .catch(() => toast.error("Failed to fetch departments"));
   };
@@ -186,7 +186,7 @@ const UsersList = () => {
       level: modalData.level || null
     };
     axios
-    .put(`${API_URL}/api/users/update/${modalData.id}`, updatedUser)
+    .put(`${process.env.REACT_APP_API_URL}/api/users/update/${modalData.id}`, updatedUser)
     .then((res) => {
       if (res.data.success) {
         toast.success(res.data.message); 
@@ -215,7 +215,7 @@ const UsersList = () => {
   // Confirm Delete
   const confirmDelete = () => {
     axios
-    .delete(`${API_URL}/api/users/delete/${deleteUserData.id}`)
+    .delete(`${process.env.REACT_APP_API_URL}/api/users/delete/${deleteUserData.id}`)
     .then(() => {
       toast.success(`${deleteUserData.name} deleted successfully!`);
       fetchUsers();

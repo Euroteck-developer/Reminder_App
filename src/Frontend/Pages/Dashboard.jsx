@@ -57,17 +57,17 @@ const Dashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const userRes = await axios.get(`${API_URL}/api/me`, {
+        const userRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const loggedUser = userRes.data;
         setUser(loggedUser);
         
         const [tasksRes, meetingsRes] = await Promise.all([
-          axios.get(`${API_URL}/api/reminders`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/api/reminders`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get(`${API_URL}/api/meetings`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/api/meetings`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -145,7 +145,7 @@ const Dashboard = () => {
       if (!deleteTarget) return;
         setDeleting(true);
         try {
-          await axios.delete(`${API_URL}/api/meetings/${deleteTarget}`, {
+          await axios.delete(`${process.env.REACT_APP_API_URL}/api/meetings/${deleteTarget}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setMeetings((prev) => prev.filter((m) => m.id !== deleteTarget));
@@ -267,7 +267,7 @@ const Dashboard = () => {
   const handleStatusChange = async (meetingId, newStatus) => {
     try {
       await axios.put(
-        `${API_URL}/api/meetings/status`,
+        `${process.env.REACT_APP_API_URL}/api/meetings/status`,
         { meetingId, status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
