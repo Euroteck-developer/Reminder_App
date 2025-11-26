@@ -95,7 +95,7 @@ app.set("onlineUsers", onlineUsers);
 // Start Server
 const PORT = process.env.PORT;
 server.listen(PORT, () => {
-console.log(" Running in:", process.env.FRONTEND_URL);
+console.log(" Running in:", PORT);
 });
 
 // Export (for controllers)
