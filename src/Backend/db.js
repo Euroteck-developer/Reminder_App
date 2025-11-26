@@ -57,46 +57,25 @@
 // module.exports = getConnection;
 
 const mysql = require("mysql2");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 
-let db;
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: { rejectUnauthorized: false }
+});
 
-function connectDB() {
-  db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
-    ssl: { rejectUnauthorized: false }
-  });
-
-  db.connect((err) => {
-    if (err) {
-      console.log("❌ DB Connection Error:", err.code);
-      setTimeout(connectDB, 2000); // retry after 2 sec
-    } else {
-      console.log("✅ MySQL Connected");
-    }
-  });
-
-  db.on("error", (err) => {
-    console.log("⚠️ MySQL Error:", err.code);
-
-    if (
-      err.code === "PROTOCOL_CONNECTION_LOST" ||
-      err.code === "ECONNRESET" ||
-      err.code === "ETIMEDOUT"
-    ) {
-      console.log("🔄 Reconnecting...");
-      connectDB();
-    } else {
-      throw err;
-    }
-  });
-}
-
-connectDB();
+db.connect(err => {
+  if (err) {
+    console.error("DB connection failed:", err);
+  } else {
+    console.log("MySQL Connected");
+  }
+});
 
 module.exports = db;
 
