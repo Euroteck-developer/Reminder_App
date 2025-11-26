@@ -223,11 +223,11 @@
 // };
 
 
-const db = require("../db"); // using pool
+const db = require("../db");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron");
 
-// ---------------- EMAIL SETUP ----------------
+// ---------------- EMAIL ----------------
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
@@ -248,7 +248,7 @@ const sendEmail = async (to, subject, html) => {
   });
 };
 
-// ---------------- HELPER FUNCTIONS ----------------
+// ---------------- HELPERS ----------------
 const toMySQLDate = (date) => {
   const d = new Date(date);
   const pad = (n) => (n < 10 ? "0" + n : n);
@@ -272,7 +272,7 @@ const getSelfReminder = (req, res) => {
   db.query(query, [taskId, userId], (err, rows) => {
     if (err) {
       console.error("DB Error:", err);
-      return res.status(500).json({ success: false, message: "Database error" });
+      return res.status(500).json({ message: "Database error" });
     }
     res.json(rows.length > 0 ? rows[0] : null);
   });
@@ -282,38 +282,30 @@ const saveSelfReminder = (req, res) => {
   const { taskId, reminder_datetime } = req.body;
   const userId = req.user.id;
 
-  if (!taskId || !reminder_datetime) return res.status(400).json({ success: false, message: "Missing fields" });
+  if (!taskId || !reminder_datetime) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
 
   const mysqlDate = toMySQLDate(reminder_datetime);
 
   const checkQuery = `SELECT id FROM task_self_reminders WHERE task_id = ? AND user_id = ? LIMIT 1`;
 
   db.query(checkQuery, [taskId, userId], (err, rows) => {
-    if (err) {
-      console.error("Check Error:", err);
-      return res.status(500).json({ success: false, message: "Database error" });
-    }
+    if (err) return res.status(500).json({ message: "Database error" });
 
     if (rows.length > 0) {
       const updateQuery = `UPDATE task_self_reminders SET reminder_datetime = ?, sent = 0 WHERE id = ?`;
       db.query(updateQuery, [mysqlDate, rows[0].id], (uErr) => {
-        if (uErr) {
-          console.error("Update Error:", uErr);
-          return res.status(500).json({ success: false, message: "Error updating reminder" });
-        }
-        return res.json({ success: true, message: "Self reminder updated successfully" });
+        if (uErr) return res.status(500).json({ message: "Error updating reminder" });
+        return res.json({ message: "Self reminder updated successfully" });
       });
-      return;
+    } else {
+      const insertQuery = `INSERT INTO task_self_reminders (task_id, user_id, reminder_datetime, sent) VALUES (?, ?, ?, 0)`;
+      db.query(insertQuery, [taskId, userId, mysqlDate], (iErr) => {
+        if (iErr) return res.status(500).json({ message: "Error adding reminder" });
+        return res.json({ message: "Self reminder added successfully" });
+      });
     }
-
-    const insertQuery = `INSERT INTO task_self_reminders (task_id, user_id, reminder_datetime, sent) VALUES (?, ?, ?, 0)`;
-    db.query(insertQuery, [taskId, userId, mysqlDate], (iErr) => {
-      if (iErr) {
-        console.error("Insert Error:", iErr);
-        return res.status(500).json({ success: false, message: "Error adding reminder" });
-      }
-      return res.json({ success: true, message: "Self reminder added successfully" });
-    });
   });
 };
 
@@ -332,8 +324,7 @@ cron.schedule("* * * * *", () => {
 
     for (const r of rows) {
       try {
-        const cleanTitle = (r.task_title || "").trim();
-        const shortTitle = cleanTitle.length > 40 ? cleanTitle.substring(0, 40) + "..." : cleanTitle;
+        const shortTitle = (r.task_title || "").trim().slice(0, 40) + (r.task_title.length > 40 ? "..." : "");
 
         const emailHtml = `
           <div style="font-family: Arial; padding: 20px; background: #f7f7f7">
@@ -357,6 +348,7 @@ cron.schedule("* * * * *", () => {
 
         await sendEmail(r.email, "Task Reminder", emailHtml);
         markReminderSent(r.id);
+
         console.log(`Reminder Sent | User: ${r.email} | Name: ${r.username}`);
       } catch (e) {
         console.error("Email Send Error:", e);
