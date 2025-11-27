@@ -5,17 +5,30 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 
 // Configure mail transporter
+// const transporter = nodemailer.createTransport({
+//   host: process.env.EMAIL_HOST,
+//   port: process.env.EMAIL_PORT,
+//   secure: false,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+//   tls: {
+//     ciphers: "SSLv3"
+//   }
+// });
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false,
+  port: Number(process.env.EMAIL_PORT),
+  secure: process.env.EMAIL_PORT == 465,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: {
-    ciphers: "SSLv3"
-  }
+  connectionTimeout: 10000, // 10s timeout
+  logger: true,
+  debug: true,
 });
 
 // Helper to delete file if exists

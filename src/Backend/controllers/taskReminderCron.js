@@ -4,16 +4,30 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 // Email transporter setup
+// const transporter = nodemailer.createTransport({
+//   host: process.env.EMAIL_HOST,
+//   port: process.env.EMAIL_PORT,
+//   secure: false,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+//   tls: { ciphers: "SSLv3" },
+// });
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: false,
+  port: Number(process.env.EMAIL_PORT),
+  secure: process.env.EMAIL_PORT == 465,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  tls: { ciphers: "SSLv3" },
+  connectionTimeout: 10000, // 10s timeout
+  logger: true,
+  debug: true,
 });
+
 
 // Run daily at 11:30 AM
 cron.schedule("30 11 * * *", async () => {
