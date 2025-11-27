@@ -16,16 +16,12 @@ const nodemailer = require("nodemailer");
 // });
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.office365.com",
+  host: "smtp.sendgrid.net",
   port: 587,
-  secure: false,                // MUST be false for 587
-  requireTLS: true,             // Forces TLS upgrade
-  tls: {
-    ciphers: "SSLv3"
-  },
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,  // your office365 email
-    pass: process.env.EMAIL_PASS,  // app password
+    user: "apikey",  // literally the word "apikey"
+    pass: process.env.SENDGRID_API_KEY, // your actual API key
   },
 });
 
