@@ -191,7 +191,10 @@ const sendOtp = (req, res) => {
 
       const msg = {
         to: email,
-        from: "Reminder App <developer@euroteckindia.com>", // verified sender
+        from: {
+          name: "Reminder App",
+          email: "developer@euroteckindia.com"
+        }, // verified sender
         subject: "Secure OTP for Password Reset",
         text: `Dear ${username}, your OTP is ${otp}. It will expire in 2 minutes 30 seconds.`,
         html: `
