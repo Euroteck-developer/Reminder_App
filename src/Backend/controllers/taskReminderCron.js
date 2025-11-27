@@ -144,7 +144,8 @@ async function sendSingleTaskEmail(user, task, round) {
 
   try {
     await transporter.sendMail({
-      from: `"Task Reminder" <${process.env.EMAIL_USER}>`,
+      from: "Reminder App <developer@euroteckindia.com>" ,
+      // from: `"Task Reminder" <${process.env.EMAIL_USER}>`,
       to: user.email,
       subject,
       html,

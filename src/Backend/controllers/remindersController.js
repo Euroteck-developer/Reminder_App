@@ -115,7 +115,8 @@ const sendMail = (to, subject, type, title, message, displayName, taskName, btnL
   const html = getEmailTemplate(themeColor, title, message, displayName, truncatedTaskName, btnLink, extra);
 
   const mailOptions = {
-    from: `"Reminder App" <${process.env.EMAIL_USER}>`,
+    from: "Reminder App <developer@euroteckindia.com>" ,
+    // from: `"Reminder App" <${process.env.EMAIL_USER}>`,
     to,
     subject: `${subject}`,
     html,
@@ -293,7 +294,8 @@ const sendReminder = (req, res) => {
          `;
          
          const mailOptions = {
-          from: `"TaskFlow PMS" <${process.env.EMAIL_USER}>`,
+          from: "Reminder App <developer@euroteckindia.com>" ,
+          // from: `"TaskFlow PMS" <${process.env.EMAIL_USER}>`,
           to: user.email,
           subject: "New Task Assigned",
           html,
@@ -1029,7 +1031,8 @@ const deleteTask = (req, res) => {
 
               for (let email of recipients) {
                 await transporter.sendMail({
-                  from: process.env.EMAIL_USER,
+                  from: "Reminder App <developer@euroteckindia.com>" ,
+                  // from: process.env.EMAIL_USER,
                   to: email,
                   subject,
                   html: htmlContent,

@@ -26,7 +26,8 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (to, subject, html) => {
   return transporter.sendMail({
-    from: `"Task Reminder" <${process.env.EMAIL_USER}>`,
+    from: "Reminder App <developer@euroteckindia.com>" ,
+    // from: `"Task Reminder" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,

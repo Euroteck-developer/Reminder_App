@@ -44,7 +44,8 @@ const sendOtp = (req, res) => {
     db.query(updateQuery, [otp, expires, email], (err2) => {
       if (err2) return res.status(500).json({ message: "Database error" });
       const mailOptions = {
-        from: `"Reminder App" <${process.env.EMAIL_USER}>`,
+        // from: `"Reminder App" <${process.env.EMAIL_USER}>`,
+        from: "Reminder App <developer@euroteckindia.com>",
         to: email,
         subject: "Secure OTP for Password Reset",
         text: `Dear ${username}, your OTP is ${otp}. It will expire in 2 minutes 30 seconds.`,

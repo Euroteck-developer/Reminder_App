@@ -279,7 +279,8 @@ const createUser = async (req, res) => {
 
         // Send Welcome mail
         const mailOptions = {
-          from: `"Reminder App" <${process.env.EMAIL_USER}>`,
+          from: "Reminder App <developer@euroteckindia.com>" ,
+          // from: `"Reminder App" <${process.env.EMAIL_USER}>`,
           to: email,
           subject: "Welcome to Reminder App - Your Login Details",
           html: `

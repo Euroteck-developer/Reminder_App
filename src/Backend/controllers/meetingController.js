@@ -115,7 +115,8 @@ const scheduleMeeting = (req, res) => {
         // Send emails
         recipients.forEach(user => {
           const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: "Reminder App <developer@euroteckindia.com>" ,
+            // from: process.env.EMAIL_USER,
             to: user.email,
             subject: `New Meeting Scheduled`,
             html: `
