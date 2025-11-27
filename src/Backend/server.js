@@ -16,15 +16,38 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigin =
-    process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
+// const allowedOrigin =
+//     process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
+
+// app.use(
+//   cors({
+//     origin: allowedOrigin,
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN,
+  "http://localhost:3000",
+];
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS blocked: " + origin));
+      }
+    },
     credentials: true,
   })
 );
+
 
 app.use(bodyParser.json());
 
