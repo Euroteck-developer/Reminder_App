@@ -30,7 +30,7 @@ const ForgotPassword = () => {
     if (!email) return toast.error("Email is required");
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/password/send-otp`, {
+      const res = await fetch(`${API_URL}/api/password/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
     if (otpValue.length < 6) return toast.error("Enter complete OTP");
 
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/password/verify-otp`, {
+      const res = await fetch(`${API_URL}/api/password/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue }),
@@ -85,7 +85,7 @@ const ForgotPassword = () => {
 
     try {
       const otpValue = otp.join("");
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/password/reset-password`, {
+      const res = await fetch(`${API_URL}/api/password/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpValue, newPassword }),
@@ -132,7 +132,7 @@ const ForgotPassword = () => {
 
   const handleResendOtp = async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/password/send-otp`, {
+      const res = await fetch(`${API_URL}/api/password/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

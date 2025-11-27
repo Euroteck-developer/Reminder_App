@@ -49,7 +49,7 @@ const DirectorDashboard = () => {
   useEffect(() => {
     if (!token) return;
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users/profile`, {
+      .get(`${API_URL}/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUser(res.data))

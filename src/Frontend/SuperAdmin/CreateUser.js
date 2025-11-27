@@ -30,12 +30,12 @@ const CreateUser = () => {
   // Fetch departments and roles on mount
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users/departments`)
+      .get(`${API_URL}/api/users/departments`)
       .then((res) => setDepartments(res.data))
       .catch(() => toast.error("Failed to fetch departments"));
 
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/users/roles`)
+      .get(`${API_URL}/api/users/roles`)
       .then((res) => setRoles(res.data))
       .catch(() => toast.error("Failed to fetch roles"));
   }, []);
@@ -52,7 +52,7 @@ const CreateUser = () => {
     }
 
     axios
-    .get(`${process.env.REACT_APP_API_URL}/api/users/reports-to`, { params })
+    .get(`${API_URL}/api/users/reports-to`, { params })
     .then((res) => setUsers(res.data))
     .catch(() => {
       setUsers([]);
@@ -81,7 +81,7 @@ const CreateUser = () => {
         if (formData[key] !== null) data.append(key, formData[key]);
       });
 
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/users/create`, data, {
+      const res = await axios.post(`${API_URL}/api/users/create`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

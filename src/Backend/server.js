@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigin =
-    process.env.CORS_ORIGIN || process.env.FRONTEND_URL;
+    process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
 
 app.use(
   cors({

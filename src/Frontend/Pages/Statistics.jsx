@@ -84,7 +84,7 @@ const Statistics = () => {
     if (!token) return;
 
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/all-users`, {
+      const res = await axios.get(`${API_URL}/api/users/all-users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -110,7 +110,7 @@ const Statistics = () => {
     try {
       setLoading(true);
 
-      let url = `${process.env.REACT_APP_API_URL}/api/stats/user-performance?type=${encodeURIComponent(
+      let url = `${API_URL}/api/stats/user-performance?type=${encodeURIComponent(
         type
       )}`;
 

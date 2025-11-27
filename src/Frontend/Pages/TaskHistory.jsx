@@ -19,7 +19,7 @@ const TaskHistory = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/reminders/history/user`, {
+        const res = await axios.get(`${API_URL}/api/reminders/history/user`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         let data = res.data.data || [];

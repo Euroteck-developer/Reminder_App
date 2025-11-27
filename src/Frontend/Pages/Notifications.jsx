@@ -19,7 +19,7 @@ const Notifications = ({ token, user }) => {
 
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/notifications`, {
+        const res = await axios.get(`${API_URL}/api/notifications`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setNotifications(res.data);
@@ -38,7 +38,7 @@ const Notifications = ({ token, user }) => {
   const handleOpen = async (id) => {
     try {
       // console.log(" Opening notification:", id);
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/notifications/${id}/opened`, {}, {
+      await axios.put(`${API_URL}/api/notifications/${id}/opened`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -54,7 +54,7 @@ const Notifications = ({ token, user }) => {
       // console.log(" Reading notification:", id);
       const readAt = new Date().toISOString();
 
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/notifications/${id}/read`, {}, {
+      await axios.put(`${API_URL}/api/notifications/${id}/read`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
