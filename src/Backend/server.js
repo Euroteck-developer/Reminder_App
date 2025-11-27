@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigin =
-    "https://reminder-app-drab.vercel.app/";
+    "https://reminder-app-drab.vercel.app";
     // process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
     // "https://euroteck-reminder-app.netlify.app";
 app.use(
@@ -77,7 +77,8 @@ app.get("/", (req, res) => res.send(" Notification App Backend Running"));
 //  Socket.io Setup
 const io = new Server(server, {
   cors: {
-    origin:  process.env.CORS_ORIGIN || process.env.FRONTEND_URL,
+    origin: "https://reminder-app-drab.vercel.app",
+    // origin:  process.env.CORS_ORIGIN || process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
