@@ -17,8 +17,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigin =
+    "https://reminder-app-drab.vercel.app/";
     // process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
-    "https://euroteck-reminder-app.netlify.app";
+    // "https://euroteck-reminder-app.netlify.app";
 app.use(
   cors({
     origin: allowedOrigin,
