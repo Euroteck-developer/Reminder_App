@@ -27,21 +27,22 @@ app.use(express.urlencoded({ extended: true }));
 // );
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  process.env.CORS_ORIGIN,
+  process.env.FRONTEND_URL || "",
+  process.env.CORS_ORIGIN || "",
+  process.env.NETLIFY_PREVIEW_URL || "",
   "http://localhost:3000",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, curl, etc.)
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("CORS blocked: " + origin));
+        console.log("❌ BLOCKED ORIGIN:", origin);
+        callback(null, false);
       }
     },
     credentials: true,
