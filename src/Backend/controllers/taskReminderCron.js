@@ -16,16 +16,18 @@ require("dotenv").config();
 // });
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: Number(process.env.EMAIL_PORT) === 465, // true for 465, false for 587
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+  host: "smtp.office365.com",
+  port: 587,
+  secure: false,                // MUST be false for 587
+  requireTLS: true,             // Forces TLS upgrade
+  tls: {
+    ciphers: "SSLv3"
   },
-  connectionTimeout: 10000, // optional: 10s timeout
+  auth: {
+    user: process.env.EMAIL_USER,  // your office365 email
+    pass: process.env.EMAIL_PASS,  // app password
+  },
 });
-
 
 // Run daily at 11:30 AM
 cron.schedule("30 11 * * *", async () => {

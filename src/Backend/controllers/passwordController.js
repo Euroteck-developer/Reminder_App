@@ -16,17 +16,19 @@ require("dotenv").config();
 // });
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: process.env.EMAIL_PORT == 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+  host: "smtp.office365.com",
+  port: 587,
+  secure: false,                // MUST be false for 587
+  requireTLS: true,             // Forces TLS upgrade
+  tls: {
+    ciphers: "SSLv3"
   },
-  connectionTimeout: 10000, // 10s timeout
-  logger: true,
-  debug: true,
+  auth: {
+    user: process.env.EMAIL_USER,  // your office365 email
+    pass: process.env.EMAIL_PASS,  // app password
+  },
 });
+
 
 // Step 1: Send OTP
 const sendOtp = (req, res) => {
