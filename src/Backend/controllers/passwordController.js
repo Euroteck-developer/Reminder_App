@@ -162,23 +162,14 @@
 
 // module.exports = { sendOtp, verifyOtp, resetPassword };
 
-
 const db = require("../db");
 const bcrypt = require("bcryptjs");
 const { addSeconds } = require("date-fns");
-const nodemailer = require("nodemailer");
 require("dotenv").config();
+const sgMail = require("@sendgrid/mail");
 
-// Nodemailer with SendGrid
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "apikey", // literally "apikey"
-    pass: process.env.SENDGRID_API_KEY,
-  },
-});
+// Configure SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Step 1: Send OTP
 const sendOtp = (req, res) => {
@@ -192,27 +183,31 @@ const sendOtp = (req, res) => {
 
     const username = results[0].name || results[0].username || "User";
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expires = addSeconds(new Date(), 150);
+    const expires = addSeconds(new Date(), 150); // 2:30 min
 
     const updateQuery = "UPDATE users SET otp=?, otp_expires=? WHERE email=?";
     db.query(updateQuery, [otp, expires, email], (err2) => {
       if (err2) return res.status(500).json({ message: "Database error" });
 
-      const mailOptions = {
-        from: "Reminder App <developer@euroteckindia.com>",
+      const msg = {
         to: email,
+        from: "Reminder App <developer@euroteckindia.com>", // verified sender
         subject: "Secure OTP for Password Reset",
         text: `Dear ${username}, your OTP is ${otp}. It will expire in 2 minutes 30 seconds.`,
-        html: `<h3>Dear ${username},</h3><p>Your OTP is: <b>${otp}</b></p><p>Expires in 2 minutes 30 seconds.</p>`,
+        html: `
+          <h3>Dear ${username},</h3>
+          <p>Your OTP is: <b>${otp}</b></p>
+          <p>Expires in 2 minutes 30 seconds.</p>
+        `,
       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
+      sgMail
+        .send(msg)
+        .then(() => res.json({ message: "OTP sent to your email" }))
+        .catch((error) => {
           console.error(error);
-          return res.status(500).json({ message: "Failed to send email" });
-        }
-        res.json({ message: "OTP sent to your email" });
-      });
+          res.status(500).json({ message: "Failed to send email" });
+        });
     });
   });
 };
