@@ -16,39 +16,15 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// const allowedOrigin =
-//     process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
-
-// app.use(
-//   cors({
-//     origin: allowedOrigin,
-//     credentials: true,
-//   })
-// );
-
-const allowedOrigins = [
-  process.env.FRONTEND_URL || "",
-  process.env.CORS_ORIGIN || "",
-  process.env.NETLIFY_PREVIEW_URL || "",
-  "http://localhost:3000",
-];
-
+const allowedOrigin =
+    // process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
+    "https://euroteck-reminder-app.netlify.app";
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.log("❌ BLOCKED ORIGIN:", origin);
-        callback(null, false);
-      }
-    },
+    origin: allowedOrigin,
     credentials: true,
   })
 );
-
 
 app.use(bodyParser.json());
 
