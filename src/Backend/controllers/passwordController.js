@@ -50,58 +50,58 @@
 //         subject: "Secure OTP for Password Reset",
 //         text: `Dear ${username}, your OTP is ${otp}. It will expire in 2 minutes 30 seconds.`,
 //         html: `
-//         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f2f4f8; padding: 40px 0;">
-//           <div style="max-width: 520px; margin: auto; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden;">
+        // <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f2f4f8; padding: 40px 0;">
+        //   <div style="max-width: 520px; margin: auto; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden;">
       
-//             <!-- Header -->
-//             <div style="background: linear-gradient(135deg, #0052cc, #007bff); padding: 22px; text-align: center;">
-//               <h1 style="color: #ffffff; font-size: 22px; margin: 0;">Reminder App</h1>
-//             </div>
+        //     <!-- Header -->
+        //     <div style="background: linear-gradient(135deg, #0052cc, #007bff); padding: 22px; text-align: center;">
+        //       <h1 style="color: #ffffff; font-size: 22px; margin: 0;">Reminder App</h1>
+        //     </div>
       
-//             <!-- Body -->
-//             <div style="padding: 32px; color: #333; text-align: left;">
-//               <p style="font-size: 16px; margin-bottom: 18px;">Dear <strong>${username}</strong>,</p>
+        //     <!-- Body -->
+        //     <div style="padding: 32px; color: #333; text-align: left;">
+        //       <p style="font-size: 16px; margin-bottom: 18px;">Dear <strong>${username}</strong>,</p>
 
-//               <p style="font-size: 15px; line-height: 1.6; color: #444;">
-//                 We received a request to reset your account password. Please use the One-Time Password (OTP) below to proceed securely.
-//               </p>
+        //       <p style="font-size: 15px; line-height: 1.6; color: #444;">
+        //         We received a request to reset your account password. Please use the One-Time Password (OTP) below to proceed securely.
+        //       </p>
 
-//               <div style="text-align: center; margin: 28px 0;">
-//                 <div style="
-//                   display: inline-block;
-//                   background: #007bff;
-//                   color: #ffffff;
-//                   font-size: 28px;
-//                   letter-spacing: 6px;
-//                   padding: 14px 28px;
-//                   border-radius: 10px;
-//                   font-weight: bold;
-//                 ">
-//                   ${otp}
-//                 </div>
-//               </div>
+        //       <div style="text-align: center; margin: 28px 0;">
+        //         <div style="
+        //           display: inline-block;
+        //           background: #007bff;
+        //           color: #ffffff;
+        //           font-size: 28px;
+        //           letter-spacing: 6px;
+        //           padding: 14px 28px;
+        //           border-radius: 10px;
+        //           font-weight: bold;
+        //         ">
+        //           ${otp}
+        //         </div>
+        //       </div>
 
-//               <p style="font-size: 14px; color: #666;">
-//                 This OTP will expire in <strong>2 minutes 30 seconds</strong> for security reasons.
-//               </p>
+        //       <p style="font-size: 14px; color: #666;">
+        //         This OTP will expire in <strong>2 minutes 30 seconds</strong> for security reasons.
+        //       </p>
 
-//               <p style="font-size: 14px; color: #666; margin-top: 18px;">
-//                 If you did not request a password reset, please disregard this email. Your account remains secure.
-//               </p>
+        //       <p style="font-size: 14px; color: #666; margin-top: 18px;">
+        //         If you did not request a password reset, please disregard this email. Your account remains secure.
+        //       </p>
 
-//               <p style="font-size: 15px; margin-top: 32px; color: #333;">
-//                 Best regards,<br/>
-//                 <strong>Reminder App Team</strong>
-//               </p>
-//             </div>
+        //       <p style="font-size: 15px; margin-top: 32px; color: #333;">
+        //         Best regards,<br/>
+        //         <strong>Reminder App Team</strong>
+        //       </p>
+        //     </div>
 
-//             <!-- Footer -->
-//             <div style="background: #f7f9fc; padding: 16px; text-align: center; font-size: 12px; color: #888;">
-//               &copy; ${new Date().getFullYear()} Notification App. All rights reserved.<br/>
-//               This is an automated message, please do not reply.
-//             </div>
-//           </div>
-//         </div>
+        //     <!-- Footer -->
+        //     <div style="background: #f7f9fc; padding: 16px; text-align: center; font-size: 12px; color: #888;">
+        //       &copy; ${new Date().getFullYear()} Notification App. All rights reserved.<br/>
+        //       This is an automated message, please do not reply.
+        //     </div>
+        //   </div>
+        // </div>
 //         `,
 //       };
 
@@ -198,9 +198,58 @@ const sendOtp = (req, res) => {
         subject: "Secure OTP for Password Reset",
         text: `Dear ${username}, your OTP is ${otp}. It will expire in 2 minutes 30 seconds.`,
         html: `
-          <h3>Dear ${username},</h3>
-          <p>Your OTP is: <b>${otp}</b></p>
-          <p>Expires in 2 minutes 30 seconds.</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f2f4f8; padding: 40px 0;">
+          <div style="max-width: 520px; margin: auto; background: #ffffff; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); overflow: hidden;">
+      
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #0052cc, #007bff); padding: 22px; text-align: center;">
+              <h1 style="color: #ffffff; font-size: 22px; margin: 0;">Reminder App</h1>
+            </div>
+      
+            <!-- Body -->
+            <div style="padding: 32px; color: #333; text-align: left;">
+              <p style="font-size: 16px; margin-bottom: 18px;">Dear <strong>${username}</strong>,</p>
+
+              <p style="font-size: 15px; line-height: 1.6; color: #444;">
+                We received a request to reset your account password. Please use the One-Time Password (OTP) below to proceed securely.
+              </p>
+
+              <div style="text-align: center; margin: 28px 0;">
+                <div style="
+                  display: inline-block;
+                  background: #007bff;
+                  color: #ffffff;
+                  font-size: 28px;
+                  letter-spacing: 6px;
+                  padding: 14px 28px;
+                  border-radius: 10px;
+                  font-weight: bold;
+                ">
+                  ${otp}
+                </div>
+              </div>
+
+              <p style="font-size: 14px; color: #666;">
+                This OTP will expire in <strong>2 minutes 30 seconds</strong> for security reasons.
+              </p>
+
+              <p style="font-size: 14px; color: #666; margin-top: 18px;">
+                If you did not request a password reset, please disregard this email. Your account remains secure.
+              </p>
+
+              <p style="font-size: 15px; margin-top: 32px; color: #333;">
+                Best regards,<br/>
+                <strong>Reminder App Team</strong>
+              </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="background: #f7f9fc; padding: 16px; text-align: center; font-size: 12px; color: #888;">
+              &copy; ${new Date().getFullYear()} Notification App. All rights reserved.<br/>
+              This is an automated message, please do not reply.
+            </div>
+          </div>
+        </div>
         `,
       };
 

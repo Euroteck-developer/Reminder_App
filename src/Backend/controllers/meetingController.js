@@ -353,9 +353,7 @@ require("dotenv").config();
 // Set SendGrid API Key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-/* ----------------------------------------------
-   SCHEDULE MEETING (WITH SENDGRID EMAIL)
------------------------------------------------- */
+  //  SCHEDULE MEETING (WITH SENDGRID EMAIL)
 const scheduleMeeting = (req, res) => {
   const { description, date, priority, users = [], departments = [], createdBy } = req.body;
 
@@ -373,128 +371,114 @@ const scheduleMeeting = (req, res) => {
 
     const meetingId = result.insertId;
 
-    // insert assigned users
+    // Insert assigned users
     if (users.length > 0) {
       const userValues = users.map(u => [meetingId, u]);
       db.query("INSERT INTO meeting_assignees (meeting_id, user_id) VALUES ?", [userValues]);
     }
 
-    // insert assigned departments
+    // Insert assigned departments
     if (departments.length > 0) {
       const deptValues = departments.map(d => [meetingId, d]);
       db.query("INSERT INTO meeting_departments (meeting_id, department_id) VALUES ?", [deptValues]);
     }
 
-    // Prepare notifications
-    const notifValues = [];
-    users.forEach(u => {
-      notifValues.push([
-        u,
-        "New Meeting Scheduled",
-        `A new meeting has been scheduled: ${description}`,
-        "Meeting",
-      ]);
-    });
-
-    // finalize notifications + emails
-    const finalizeNotificationsAndEmails = (extraUsers = []) => {
-      extraUsers.forEach(u => {
-        notifValues.push([
-          u,
-          "New Meeting Scheduled",
-          `A new meeting has been scheduled: ${description}`,
-          "Meeting",
-        ]);
-      });
-
-      // Insert notifications
-      if (notifValues.length > 0) {
-        db.query(
-          "INSERT INTO notifications (user_id, title, message, type) VALUES ?",
-          [notifValues]
-        );
-      }
-
-      // Recipients query
+    // Helper: get all recipients emails
+    const getRecipients = (callback) => {
       const conditions = [];
       if (users.length > 0) conditions.push(`id IN (${users.join(",")})`);
       if (departments.length > 0) conditions.push(`dept_id IN (${departments.join(",")})`);
 
-      const userQuery = `SELECT email, name FROM users WHERE ${conditions.join(" OR ")}`;
+      if (!conditions.length) return callback([]);
 
-      db.query(userQuery, async (err4, recipients) => {
-        if (err4) return res.status(500).json({ error: err4.message });
-
-        if (!recipients.length) {
-          return res.json({ message: "Meeting scheduled but no user emails found" });
-        }
-
-        // Build SendGrid emails
-        const emails = recipients.map((u) => ({
-          to: u.email,
-          from: process.env.EMAIL_FROM,
-          subject: "New Meeting Scheduled",
-          html: `
-            <div style="font-family: Arial; padding: 20px;">
-              <h3>Hello ${u.name},</h3>
-              <p>A new meeting has been scheduled:</p>
-              <ul>
-                <li><strong>Description:</strong> ${description}</li>
-                <li><strong>Date & Time:</strong> ${new Date(date).toLocaleString()}</li>
-                <li><strong>Priority:</strong> ${priority}</li>
-              </ul>
-
-              <a href="${process.env.FRONTEND_URL}/login"
-                style="
-                  background: #007bff;
-                  color: #fff;
-                  padding: 10px 18px;
-                  border-radius: 6px;
-                  text-decoration: none;
-                  font-weight: bold;
-                ">
-                Login to Dashboard
-              </a>
-
-              <p style="margin-top: 20px; font-size: 12px; color: #666;">
-                This is an automated message. Please do not reply.
-              </p>
-            </div>
-          `,
-        }));
-
-        // Send in parallel
-        try {
-          await Promise.all(emails.map((email) => sgMail.send(email)));
-        } catch (emailErr) {
-          console.log("SendGrid Email Error:", emailErr?.message);
-        }
-
-        res.json({
-          message: "Meeting scheduled successfully and emails sent",
-          meetingId,
-          notifiedUsers: recipients.length,
-        });
+      const query = `SELECT DISTINCT email, name FROM users WHERE ${conditions.join(" OR ")}`;
+      db.query(query, (err, recipients) => {
+        if (err) return res.status(500).json({ error: err.message });
+        callback(recipients || []);
       });
     };
 
-    // If departments selected, also notify department users
-    if (departments.length > 0) {
-      const deptQuery = `SELECT id FROM users WHERE dept_id IN (${departments.join(",")})`;
-      db.query(deptQuery, (errDept, deptUsers) => {
-        const extraUserIds = deptUsers?.length ? deptUsers.map(u => u.id) : [];
-        finalizeNotificationsAndEmails(extraUserIds);
+    getRecipients(async (recipients) => {
+      if (!recipients.length) {
+        return res.json({ message: "Meeting scheduled but no user emails found", meetingId });
+      }
+
+      // Build SendGrid emails
+      const emails = recipients.map((user) => ({
+        to: user.email,
+        from: {
+          email: process.env.EMAIL_FROM,
+          name: "Reminder App",
+        },
+        subject: "New Meeting Scheduled",
+        html: `
+          <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: auto; padding: 20px; background-color: #f4f6f8; border-radius: 8px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+              <h2 style="color: #007bff;">Reminder App</h2>
+              <p style="color: #555;">New Meeting Notification</p>
+            </div>
+
+            <p>Hello <strong>${user.name}</strong>,</p>
+            <p>A new meeting has been scheduled. Details are as follows:</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+              <tr>
+                <td style="padding: 10px; background-color: #007bff; color: #fff; font-weight: bold;">Description</td>
+                <td style="padding: 10px; background-color: #e9ecef;">${description}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; background-color: #007bff; color: #fff; font-weight: bold;">Date & Time</td>
+                <td style="padding: 10px; background-color: #e9ecef;">${new Date(date).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; background-color: #007bff; color: #fff; font-weight: bold;">Priority</td>
+                <td style="padding: 10px; background-color: #e9ecef;">${priority}</td>
+              </tr>
+            </table>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL}" style="background-color: #007bff; color: #fff; padding: 12px 25px; border-radius: 6px; text-decoration: none; font-weight: bold;">View Meeting</a>
+            </div>
+
+            <p style="color: #888; font-size: 12px; text-align: center;">
+              This is an automated message from Reminder App. Please do not reply.
+            </p>
+          </div>
+        `,
+      }));
+
+      try {
+        await Promise.all(emails.map((email) => sgMail.send(email)));
+        console.log(`Emails sent to ${recipients.map(r => r.email).join(", ")}`);
+      } catch (sendErr) {
+        console.error("SendGrid Error:", sendErr);
+      }
+
+      // Insert notifications
+      const notifValues = recipients.map((u) => [
+        u.email, // assuming your notifications table uses email
+        "New Meeting Scheduled",
+        `A new meeting has been scheduled: ${description}`,
+        "Meeting",
+      ]);
+
+      if (notifValues.length > 0) {
+        db.query("INSERT INTO notifications (user_id, title, message, type) VALUES ?", [notifValues], (errNotif) => {
+          if (errNotif) console.error("Notification Insert Error:", errNotif.message);
+        });
+      }
+
+      res.json({
+        message: "Meeting scheduled successfully and emails sent",
+        meetingId,
+        notifiedUsers: recipients.length,
       });
-    } else {
-      finalizeNotificationsAndEmails([]);
-    }
+    });
   });
 };
 
 
-/* ----------------------------------------------
-   GET ALL MEETINGS
------------------------------------------------- */
+  //  GET ALL MEETINGS
 const getAllMeetings = (req, res) => {
   const userId = req.user?.id;
   const userRole = req.user?.role?.toLowerCase();
@@ -587,10 +571,7 @@ const getAllMeetings = (req, res) => {
   });
 };
 
-
-/* ----------------------------------------------
-   UPDATE MEETING STATUS
------------------------------------------------- */
+  //  UPDATE MEETING STATUS
 const updateMeetingStatus = (req, res) => {
   const { meetingId, status } = req.body;
   const userId = req.user.id;
@@ -618,9 +599,7 @@ const updateMeetingStatus = (req, res) => {
 };
 
 
-/* ----------------------------------------------
-   DELETE MEETING
------------------------------------------------- */
+  //  DELETE MEETING
 const deleteMeeting = (req, res) => {
   const userId = req.user?.id;
   const { meetingId } = req.params;
