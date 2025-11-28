@@ -1137,18 +1137,16 @@ const sendMail = (to, subject, type, title, message, displayName, taskName, btnL
 
   const msg = {
     to,
-    from: process.env.EMAIL_FROM,
+    from: {
+      email: process.env.EMAIL_FROM,
+      name: "Reminder App",
+    },
     subject,
     html,
   };
 
   sgMail
-    .send({
-      to: mailOptions.to,
-      from: process.env.EMAIL_FROM,
-      subject: mailOptions.subject,
-      html: mailOptions.html,
-    })
+    .send(msg)
     .then(() => console.log("Mail Sent"))
     .catch((err) => console.error("SendGrid Error:", err.response?.body || err));
 };
